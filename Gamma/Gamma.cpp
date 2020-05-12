@@ -1,20 +1,72 @@
-﻿// Gamma.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#include <iostream>  
+#include <opencv2\core\core.hpp>  
+#include <opencv2\highgui\highgui.hpp>  
+#include <opencv2\imgproc\imgproc.hpp>  
+#include<cmath>
+#include<opencv2/opencv.hpp>
+#include<iostream>
+#include<math.h>
+#include <vector>
+#include "cv.h"
+using namespace cv;
+using namespace std;
 
-#include <iostream>
+//课前准备
+Mat gammaTransform(Mat &srcImage, float kFactor)
+{
 
+	unsigned char LUT[256];
+	for (int i = 0; i < 256; i++)
+	{
+		float f = (i + 0.5f) / 255;
+		f = (float)(pow(f, kFactor));
+		LUT[i] = saturate_cast<uchar>(f*255.0f - 0.5f);
+	}
+	Mat resultImage = srcImage.clone();
+
+	if (srcImage.channels() == 1)
+	{
+
+		MatIterator_<uchar> iterator = resultImage.begin<uchar>();
+		MatIterator_<uchar> iteratorEnd = resultImage.end<uchar>();
+		for (; iterator != iteratorEnd; iterator++)
+		{
+			*iterator = LUT[(*iterator)];
+		}
+	}
+	else
+	{
+
+
+		MatIterator_<Vec3b> iterator = resultImage.begin<Vec3b>();
+		MatIterator_<Vec3b> iteratorEnd = resultImage.end<Vec3b>();
+		for (; iterator != iteratorEnd; iterator++)
+		{
+			(*iterator)[0] = LUT[((*iterator)[0])];//b
+			(*iterator)[1] = LUT[((*iterator)[1])];//g
+			(*iterator)[2] = LUT[((*iterator)[2])];//r
+		}
+	}
+	return resultImage;
+}
 int main()
 {
-    std::cout << "Hello World!\n";
+	Mat srcImage = imread("E:\\9\\hogTemplate.jpg");
+	if (!srcImage.data)
+	{
+		printf("could not load image...\n");
+		return -1;
+	}
+	//取两种不同的gamma值
+	float gamma1 = 3.33f;
+	float gamma2 = 0.33f;
+	float kFactor1 = 1 / gamma1;
+	float kFactor2 = 1 / gamma2;
+	Mat result1 = gammaTransform(srcImage, kFactor1);
+	Mat result2 = gammaTransform(srcImage, kFactor2);
+	imshow("srcImage", srcImage);
+	imshow("res1", result1);
+	imshow("res2", result2);
+	waitKey(0);
+	return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
