@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-//练习1
+//练习3
 int gammaCorrection(cv::Mat srcMat, cv::Mat & dstMat, float gamma)
 {
 
@@ -39,7 +39,7 @@ int gammaCorrection(cv::Mat srcMat, cv::Mat & dstMat, float gamma)
 int gammaMain()
 {
 
-	cv::Mat srcMat = imread("E:\\11\\face.jpg", 0);//gtest
+	cv::Mat srcMat = imread("E:\\11\\gtest.jpg", 0);
 	cv::Mat dstMat;
 
 	if (srcMat.empty()) {
@@ -47,7 +47,7 @@ int gammaMain()
 		return -1;
 	}
 
-	float gamma = 0.5;
+	float gamma = 0.45;
 
 	gammaCorrection(srcMat, dstMat, gamma);
 
