@@ -20,4 +20,5 @@ opencv简单实践11：gamma矫正（手动实现）、直方图均衡（三通�
 找出隐藏的信息。
 
 我的代码https://github.com/DawnYue/Gamma
+
 老师代码https://github.com/lizhu1126/dip-class-demos/blob/feature11.enhanceHist/dip-class-demos/funtions.cpp#L187
